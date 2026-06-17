@@ -1,11 +1,13 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import {
   collection,
   addDoc
 } from "firebase/firestore"
 
-import { db } from "../firebase"
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+
+import { db, storage } from "../firebase"
 
 function AddProperty() {
 
@@ -27,7 +29,8 @@ function AddProperty() {
   const [furnished, setFurnished] = useState("No")
 
   // Media
-  const [image, setImage] = useState(null)
+  const [images, setImages] = useState([])
+  const [imagePreviews, setImagePreviews] = useState([])
   const [videoUrl, setVideoUrl] = useState("")
 
   // Owner Phone
@@ -35,15 +38,28 @@ function AddProperty() {
     useState("255792077777")
 
   // Coordinates
-  const [latitude, setLatitude] =
-    useState("")
-
-  const [longitude, setLongitude] =
-    useState("")
+  const [latitude, setLatitude] = useState("")
+  const [longitude, setLongitude] = useState("")
 
   // Status
-  const [status, setStatus] =
-    useState("Available")
+  const [status, setStatus] = useState("Available")
+
+  // Loading & Progress
+  const [loading, setLoading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+
+  useEffect(() => {
+    return () => {
+      imagePreviews.forEach(url => URL.revokeObjectURL(url))
+    }
+  }, [imagePreviews])
+
+  const handleImageSelect = (e) => {
+    const files = Array.from(e.target.files)
+    setImages(files)
+    const previews = files.map(file => URL.createObjectURL(file))
+    setImagePreviews(previews)
+  }
 
   const uploadProperty = async () => {
 
@@ -56,23 +72,49 @@ function AddProperty() {
       !street ||
       !price ||
       !category ||
-      !image
+      images.length === 0
     ) {
 
-      alert("Please fill all required fields")
+      alert("Please fill all required fields and select at least one image")
       return
 
     }
 
     try {
 
-      let imageUrl = ""
+      setLoading(true)
+      setUploadProgress(0)
 
-if (image) {
+      const imageUrls = []
+      let totalBytes = 0
+      let uploadedBytes = 0
 
-  imageUrl = URL.createObjectURL(image)
+      images.forEach(img => totalBytes += img.size)
 
-}
+      for (let i = 0; i < images.length; i++) {
+        const image = images[i]
+        const imageRef = ref(storage, `properties/${Date.now()}_${image.name}`)
+        const uploadTask = uploadBytesResumable(imageRef, image)
+
+        await new Promise((resolve, reject) => {
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              uploadedBytes += snapshot.bytesTransferred
+              const overallProgress = Math.round((uploadedBytes / totalBytes) * 100)
+              setUploadProgress(Math.min(overallProgress, 100))
+            },
+            (error) => {
+              reject(error)
+            },
+            async () => {
+              const url = await getDownloadURL(uploadTask.snapshot.ref)
+              imageUrls.push(url)
+              resolve()
+            }
+          )
+        })
+      }
 
       await addDoc(
         collection(db, "properties"),
@@ -93,7 +135,7 @@ if (image) {
           parking,
           furnished,
 
-          image: imageUrl,
+          images: imageUrls,
           videoUrl,
 
           ownerPhone,
@@ -126,7 +168,9 @@ if (image) {
       setParking("Yes")
       setFurnished("No")
 
-      setImage("null")
+      imagePreviews.forEach(url => URL.revokeObjectURL(url))
+      setImages([])
+      setImagePreviews([])
       setVideoUrl("")
 
       setLatitude("")
@@ -134,9 +178,15 @@ if (image) {
 
       setStatus("Available")
 
+      setUploadProgress(0)
+
     } catch (error) {
 
       alert(error.message)
+
+    } finally {
+
+      setLoading(false)
 
     }
 
@@ -419,35 +469,36 @@ if (image) {
 
           </select>
 
-          {/* Image */}
-          {/* Property Image Upload */}
-<div>
+          {/* Images */}
+          <div>
 
-<label className="block mb-2 font-semibold">
-  Property Image
-</label>
+            <label className="block mb-2 font-semibold">
+              Property Images
+            </label>
 
-<input
-  type="file"
-  accept="image/*"
-  onChange={(e) =>
-    setImage(e.target.files[0])
-  }
-  className="w-full bg-zinc-900 p-4 rounded-2xl"
-/>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImageSelect}
+              className="w-full bg-zinc-900 p-4 rounded-2xl"
+            />
 
-</div>
+          </div>
 
-{/* Preview */}
-{image && (
-
-<img
-  src={URL.createObjectURL(image)}
-  alt="Preview"
-  className="w-full h-60 object-cover rounded-2xl mt-4"
-/>
-
-)}
+          {/* Previews */}
+          {imagePreviews.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+              {imagePreviews.map((preview, idx) => (
+                <img
+                  key={idx}
+                  src={preview}
+                  alt={`Preview ${idx + 1}`}
+                  className="w-full h-40 object-cover rounded-2xl"
+                />
+              ))}
+            </div>
+          )}
 
           {/* Video */}
           <input
@@ -460,13 +511,30 @@ if (image) {
             className="w-full bg-zinc-900 p-4 rounded-2xl outline-none"
           />
 
+          {/* Progress Bar */}
+          {loading && uploadProgress > 0 && (
+            <div className="w-full bg-zinc-800 rounded-full h-4 overflow-hidden">
+              <div
+                className="h-full bg-green-500 transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              />
+            </div>
+          )}
+
+          {loading && (
+            <p className="text-zinc-400 text-sm text-center">
+              Uploading... {uploadProgress}%
+            </p>
+          )}
+
           {/* Upload Button */}
           <button
             onClick={uploadProperty}
-            className="w-full bg-white text-black py-4 rounded-2xl font-bold hover:bg-zinc-300 transition"
+            disabled={loading}
+            className="w-full bg-white text-black py-4 rounded-2xl font-bold hover:bg-zinc-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
 
-            Upload Property
+            {loading ? "Uploading..." : "Upload Property"}
 
           </button>
 
