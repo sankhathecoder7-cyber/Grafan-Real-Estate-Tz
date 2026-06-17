@@ -134,126 +134,126 @@ function Home() {
 
   return (
 
-    <div className="bg-deep-dark min-h-screen text-white pb-28">
+    <div className="bg-deep-dark min-h-screen text-white pb-8 ml-20 md:ml-64 pt-4">
 
-      {/* Hero */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gold-dark/20 via-deep-dark to-gold-dark/10 animate-gradient pointer-events-none" />
-        <div className="absolute top-20 -left-20 w-72 h-72 bg-gold/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
+      <Navbar />
 
+      <div className="sticky top-0 z-40 bg-deep-dark/95 backdrop-blur-md border-b border-white/5">
+
+        {/* Hero */}
+        <div className="relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-gold-dark/20 via-deep-dark to-gold-dark/10 animate-gradient pointer-events-none" />
+          <div className="absolute top-20 -left-20 w-72 h-72 bg-gold/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="px-4 md:px-6 pt-4 md:pt-8 relative z-10"
+          >
+            <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full text-sm text-gold-light mb-6">
+              <span className="w-2 h-2 bg-gold rounded-full animate-pulse" />
+              Premium Real Estate
+            </div>
+
+            <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.1]">
+              <span className="gradient-text">Find Properties Across Tanzania</span> 🇹🇿
+            </h1>
+
+            <p className="text-zinc-400 mt-6 text-base md:text-lg max-w-2xl leading-relaxed">
+              Discover premium apartments, houses, hotels,
+              hostels, lands, offices and more
+              from every region in Tanzania.
+            </p>
+
+            {/* Buttons */}
+            <div className="flex gap-4 mt-8 flex-wrap">
+              <Link
+                to="/register"
+                className="relative group px-8 py-4 rounded-2xl font-bold overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-gold to-gold-dark group-hover:scale-105 transition-transform duration-300" />
+                <span className="relative text-black">Get Started</span>
+              </Link>
+
+              <Link
+                to="/login"
+                className="glass-strong px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition-all duration-300"
+              >
+                Sign In
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Search */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="px-4 md:px-6 pt-12 md:pt-20 relative z-10"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="px-4 md:px-6 mt-4"
         >
-          <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full text-sm text-gold-light mb-6">
-            <span className="w-2 h-2 bg-gold rounded-full animate-pulse" />
-            Premium Real Estate
-          </div>
+          <div className="glass rounded-3xl p-6 md:p-8 space-y-5 shadow-2xl shadow-gold/5">
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-6 bg-gradient-to-b from-gold to-gold-light rounded-full" />
+              <h2 className="text-xl md:text-2xl font-bold">Search Properties</h2>
+            </div>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.1]">
-            <span className="gradient-text">Find Properties</span>
-            <br />
-            Across Tanzania
-          </h1>
-
-          <div className="text-5xl md:text-6xl mt-2 animate-float inline-block">
-            🇹🇿
-          </div>
-
-          <p className="text-zinc-400 mt-6 text-base md:text-lg max-w-2xl leading-relaxed">
-            Discover premium apartments, houses, hotels,
-            hostels, lands, offices and more
-            from every region in Tanzania.
-          </p>
-
-          {/* Buttons */}
-          <div className="flex gap-4 mt-8 flex-wrap">
-            <Link
-              to="/register"
-              className="relative group px-8 py-4 rounded-2xl font-bold overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-gold to-gold-dark group-hover:scale-105 transition-transform duration-300" />
-              <span className="relative text-black">Get Started</span>
-            </Link>
-
-            <Link
-              to="/login"
-              className="glass-strong px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition-all duration-300"
-            >
-              Sign In
-            </Link>
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Search by region, district, ward..."
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl outline-none focus:border-gold/50 focus:bg-white/[0.07] transition-all duration-300 placeholder:text-zinc-600"
+                />
+              </div>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">💰</span>
+                <input
+                  type="number"
+                  placeholder="Maximum Price (TZS)"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl outline-none focus:border-gold/50 focus:bg-white/[0.07] transition-all duration-300 placeholder:text-zinc-600"
+                />
+              </div>
+            </div>
           </div>
         </motion.div>
+
+        {/* Categories */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="flex gap-3 overflow-x-auto px-4 md:px-6 mt-8 pb-4 scrollbar-thin"
+        >
+          {categories.map((cat, index) => (
+            <motion.button
+              key={cat.name}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setSelectedCategory(cat.name)}
+              className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold whitespace-nowrap transition-all duration-300 ${
+                selectedCategory === cat.name
+                  ? "bg-gradient-to-r from-gold to-gold-dark text-black shadow-lg shadow-gold/25"
+                  : "glass hover:bg-white/[0.08] text-zinc-300"
+              }`}
+            >
+              <span className="text-lg">{cat.icon}</span>
+              <span>{cat.name}</span>
+            </motion.button>
+          ))}
+        </motion.div>
+
       </div>
-
-      {/* Search */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
-        className="px-4 md:px-6 mt-12"
-      >
-        <div className="glass rounded-3xl p-6 md:p-8 space-y-5 shadow-2xl shadow-gold/5">
-          <div className="flex items-center gap-3">
-            <div className="w-1 h-6 bg-gradient-to-b from-gold to-gold-light rounded-full" />
-            <h2 className="text-xl md:text-2xl font-bold">Search Properties</h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">🔍</span>
-              <input
-                type="text"
-                placeholder="Search by region, district, ward..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl outline-none focus:border-gold/50 focus:bg-white/[0.07] transition-all duration-300 placeholder:text-zinc-600"
-              />
-            </div>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">💰</span>
-              <input
-                type="number"
-                placeholder="Maximum Price (TZS)"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl outline-none focus:border-gold/50 focus:bg-white/[0.07] transition-all duration-300 placeholder:text-zinc-600"
-              />
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Categories */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-        className="flex gap-3 overflow-x-auto px-4 md:px-6 mt-8 pb-3 scrollbar-thin"
-      >
-        {categories.map((cat, index) => (
-          <motion.button
-            key={cat.name}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setSelectedCategory(cat.name)}
-            className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold whitespace-nowrap transition-all duration-300 ${
-              selectedCategory === cat.name
-                ? "bg-gradient-to-r from-gold to-gold-dark text-black shadow-lg shadow-gold/25"
-                : "glass hover:bg-white/[0.08] text-zinc-300"
-            }`}
-          >
-            <span className="text-lg">{cat.icon}</span>
-            <span>{cat.name}</span>
-          </motion.button>
-        ))}
-      </motion.div>
 
       {/* Listings */}
       <div className="px-4 md:px-6 mt-14">
@@ -308,9 +308,6 @@ function Home() {
           ))}
         </motion.div>
       </div>
-
-      {/* Navbar */}
-      <Navbar />
 
     </div>
 

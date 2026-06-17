@@ -11,6 +11,9 @@ import AddProperty from "./pages/AddProperty"
 import Favorites from "./pages/Favorites"
 import Bookings from "./pages/Bookings"
 import RequestOTP from "./pages/RequestOTP"
+import ChatList from "./pages/ChatList"
+import ChatRoom from "./pages/ChatRoom"
+import AdminDashboard from "./pages/AdminDashboard"
 
 import ProtectedRoute from "./components/ProtectedRoute"
 
@@ -79,6 +82,33 @@ function App() {
 <Route
   path="/request-otp/:id"
   element={<RequestOTP />}
+/>
+
+<Route
+  path="/chats"
+  element={
+    <ProtectedRoute>
+      <ChatList />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/chat/:chatId"
+  element={
+    <ProtectedRoute>
+      <ChatRoom />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/admin"
+  element={
+    <ProtectedRoute>
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
 />
 
 

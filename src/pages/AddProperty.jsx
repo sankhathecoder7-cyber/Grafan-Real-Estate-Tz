@@ -7,7 +7,7 @@ import {
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
 
-import { db, storage } from "../firebase"
+import { db, storage, auth } from "../firebase"
 
 function AddProperty() {
 
@@ -139,6 +139,8 @@ function AddProperty() {
           videoUrl,
 
           ownerPhone,
+          ownerId: auth.currentUser?.uid,
+          ownerName: auth.currentUser?.displayName || auth.currentUser?.email,
 
           latitude,
           longitude,

@@ -7,6 +7,7 @@ import {
 } from "firebase/firestore"
 
 import { db } from "../firebase"
+import ChatButton from "../components/ChatButton"
 
 function PropertyDetails() {
 
@@ -201,6 +202,9 @@ function PropertyDetails() {
           </button>
 
         </a>
+
+        {/* Chat Button */}
+        <ChatButton property={property} className="w-full mt-4" />
 
         {/* Google Maps Button */}
         <a

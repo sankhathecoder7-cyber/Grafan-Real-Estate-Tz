@@ -1,8 +1,10 @@
+import { createPortal } from "react-dom"
 import {
   FaHome,
   FaMapMarkedAlt,
   FaVideo,
-  FaUserCircle
+  FaUserCircle,
+  FaComments
 } from "react-icons/fa"
 
 import { Link, useLocation } from "react-router-dom"
@@ -12,57 +14,57 @@ const navItems = [
   { to: "/", icon: FaHome, label: "Home" },
   { to: "/map", icon: FaMapMarkedAlt, label: "Map" },
   { to: "/videos", icon: FaVideo, label: "Videos" },
+  { to: "/chats", icon: FaComments, label: "Chats" },
   { to: "/login", icon: FaUserCircle, label: "Profile" },
 ]
 
 function Navbar() {
   const { pathname } = useLocation()
 
-  return (
-    <nav className="sticky top-0 z-50">
-      <div className="relative mx-4 mb-3 glass-strong rounded-3xl shadow-2xl shadow-gold/10">
-        <div className="flex justify-around items-center py-3 px-2">
-          {navItems.map(({ to, icon: Icon, label }) => {
-            const isActive = pathname === to
+  return createPortal(
+    <nav className="fixed left-0 top-0 h-full w-20 md:w-64 z-50 bg-deep-dark/95 backdrop-blur-md border-r border-white/5">
+      <div className="flex flex-col gap-2 py-6 px-3 md:px-5">
+        {navItems.map(({ to, icon: Icon, label }) => {
+          const isActive = pathname === to
 
-            return (
-              <Link
-                key={to}
-                to={to}
-                className="relative flex flex-col items-center gap-1 py-1 px-4"
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="nav-pill"
-                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
-                    className="absolute inset-0 bg-gradient-to-r from-gold/20 via-gold/10 to-transparent rounded-2xl"
-                  />
-                )}
+          return (
+            <Link
+              key={to}
+              to={to}
+              className="relative flex items-center gap-3 py-3 px-3 md:px-4 rounded-xl"
+            >
+              {isActive && (
                 <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="relative"
-                >
-                  <Icon
-                    size={20}
-                    className={`transition-colors duration-300 ${
-                      isActive ? "text-gold" : "text-zinc-400"
-                    }`}
-                  />
-                </motion.div>
-                <span
-                  className={`relative text-[11px] font-medium transition-colors duration-300 ${
-                    isActive ? "text-gold" : "text-zinc-500"
+                  layoutId="nav-pill"
+                  transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  className="absolute inset-0 bg-gradient-to-r from-gold/20 via-gold/10 to-transparent rounded-xl"
+                />
+              )}
+              <motion.div
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="relative shrink-0"
+              >
+                <Icon
+                  size={22}
+                  className={`transition-colors duration-300 ${
+                    isActive ? "text-gold" : "text-zinc-400"
                   }`}
-                >
-                  {label}
-                </span>
-              </Link>
-            )
-          })}
-        </div>
+                />
+              </motion.div>
+              <span
+                className={`relative text-sm font-medium transition-colors duration-300 hidden md:block ${
+                  isActive ? "text-gold" : "text-zinc-500"
+                }`}
+              >
+                {label}
+              </span>
+            </Link>
+          )
+        })}
       </div>
-    </nav>
+    </nav>,
+    document.body
   )
 }
 
