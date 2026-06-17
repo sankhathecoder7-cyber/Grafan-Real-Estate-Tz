@@ -19,7 +19,7 @@ function Navbar() {
   const { pathname } = useLocation()
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full z-50">
+    <nav className="sticky top-0 z-50">
       <div className="relative mx-4 mb-3 glass-strong rounded-3xl shadow-2xl shadow-gold/10">
         <div className="flex justify-around items-center py-3 px-2">
           {navItems.map(({ to, icon: Icon, label }) => {
