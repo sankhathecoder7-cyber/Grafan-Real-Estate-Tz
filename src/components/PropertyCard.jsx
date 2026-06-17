@@ -7,6 +7,8 @@ import {
   deleteDoc
 } from "firebase/firestore"
 
+import { motion } from "framer-motion"
+
 import { auth, db } from "../firebase"
 
 function PropertyCard({ property }) {
@@ -91,88 +93,105 @@ function PropertyCard({ property }) {
 
   return (
 
-    <div
+    <motion.div
       onClick={() => navigate(`/property/${property.id}`)}
-      className="bg-zinc-900 rounded-3xl overflow-hidden cursor-pointer hover:scale-[1.02] transition duration-300"
+      whileHover={{ y: -6, scale: 1.01 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group glass rounded-3xl overflow-hidden cursor-pointer border border-white/[0.06] hover:border-gold/30 transition-all duration-500"
     >
 
       {/* Image */}
-      <div className="relative">
+      <div className="relative overflow-hidden">
 
         <img
           src={property.image}
           alt={property.title}
-          className="w-full h-64 object-cover"
+          className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
         />
 
+        <div className="absolute inset-0 bg-gradient-to-t from-deep-dark/80 via-transparent to-transparent" />
+
+        {/* Category Badge */}
+        <div className="absolute top-4 left-4 glass-strong px-4 py-2 rounded-2xl text-sm font-semibold backdrop-blur-xl">
+          {property.category}
+        </div>
+
         {/* Favorite */}
-        <button
+        <motion.button
           onClick={toggleLike}
-          className="absolute top-4 right-4 bg-black/70 w-14 h-14 rounded-full flex items-center justify-center text-3xl"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="absolute top-4 right-4 glass-strong w-12 h-12 rounded-full flex items-center justify-center text-2xl backdrop-blur-xl"
         >
           {liked ? "❤️" : "🤍"}
-        </button>
+        </motion.button>
 
       </div>
 
       {/* Content */}
-      <div className="p-5">
+      <div className="p-6">
 
-        <div className="flex justify-between items-center">
+        <div className="flex items-start justify-between gap-3">
 
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-xl font-bold text-white leading-tight">
             {property.title}
           </h2>
 
-          <span className="bg-green-500 text-black text-xs px-3 py-1 rounded-full font-semibold">
+          <span className="flex items-center gap-1 bg-emerald-500/15 text-emerald-400 text-[11px] px-3 py-1 rounded-full font-semibold border border-emerald-500/20 shrink-0 mt-1">
+            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
             Verified
           </span>
 
         </div>
 
-        <p className="text-green-400 text-xl font-bold mt-3">
-          TZS {property.price}
-        </p>
-
-        <div className="mt-3 inline-block bg-zinc-800 px-4 py-2 rounded-2xl text-sm text-white">
-          {property.category}
+        <div className="flex items-baseline gap-2 mt-4">
+          <span className="bg-gradient-to-r from-gold-light via-gold to-gold-dark bg-clip-text text-transparent text-2xl font-black">
+            TZS {property.price}
+          </span>
         </div>
 
-        <div className="mt-5 text-zinc-400 space-y-1">
-
-          <p>📍 {property.region}</p>
-          <p>🏙 {property.district}</p>
-          <p>🛣 {property.street}</p>
-
+        <div className="mt-5 text-zinc-400 space-y-2 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-base">📍</span>
+            <span>{property.region}{property.district ? `, ${property.district}` : ""}</span>
+          </div>
+          {property.street && (
+            <div className="flex items-center gap-2">
+              <span className="text-base">🛣</span>
+              <span>{property.street}</span>
+            </div>
+          )}
         </div>
 
-        <div className="flex gap-4 mt-5 text-sm flex-wrap text-white">
-
-          <div className="bg-zinc-800 px-3 py-2 rounded-xl">
+        <div className="flex gap-3 mt-5 flex-wrap">
+          <div className="glass px-3 py-2 rounded-xl text-xs font-medium text-zinc-300">
             🛏 {property.bedrooms || 0} Beds
           </div>
-
-          <div className="bg-zinc-800 px-3 py-2 rounded-xl">
+          <div className="glass px-3 py-2 rounded-xl text-xs font-medium text-zinc-300">
             🚿 {property.bathrooms || 0} Baths
           </div>
-
-          <div className="bg-zinc-800 px-3 py-2 rounded-xl">
+          <div className="glass px-3 py-2 rounded-xl text-xs font-medium text-zinc-300">
             📐 {property.size || "N/A"}
           </div>
-
         </div>
 
         {/* OTP Button */}
-        <button
+        <motion.button
           onClick={requestOTP}
-          className="w-full bg-white text-black py-4 rounded-2xl mt-6 font-bold hover:bg-zinc-300 transition"
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="relative w-full py-4 rounded-2xl mt-6 font-bold overflow-hidden group/btn"
         >
-          Request & Get OTP
-        </button>
+          <div className="absolute inset-0 bg-gradient-to-r from-gold via-gold-light to-gold-dark bg-[length:200%] animate-gradient" />
+          <span className="relative text-black flex items-center justify-center gap-2">
+            Request & Get OTP
+            <span className="transition-transform duration-300 group-hover/btn:translate-x-1">→</span>
+          </span>
+        </motion.button>
 
       </div>
 
-    </div>
+    </motion.div>
 
   )
 

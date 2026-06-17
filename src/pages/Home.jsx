@@ -9,6 +9,8 @@ import {
   getDocs
 } from "firebase/firestore"
 
+import { motion } from "framer-motion"
+
 import { db } from "../firebase"
 
 function Home() {
@@ -45,8 +47,11 @@ function Home() {
 
   if (loading) {
     return (
-      <div className="text-white flex justify-center items-center min-h-screen">
-        Loading properties...
+      <div className="flex justify-center items-center min-h-screen bg-deep-dark">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-gold/30 border-t-gold rounded-full animate-spin" />
+          <p className="text-zinc-400 text-sm tracking-widest uppercase">Loading</p>
+        </div>
       </div>
     )
   }
@@ -129,141 +134,179 @@ function Home() {
 
   return (
 
-    <div className="bg-zinc-950 min-h-screen text-white pb-28">
+    <div className="bg-deep-dark min-h-screen text-white pb-28">
 
       {/* Hero */}
-      <div className="px-4 md:px-6 pt-8">
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gold-dark/20 via-deep-dark to-gold-dark/10 animate-gradient pointer-events-none" />
+        <div className="absolute top-20 -left-20 w-72 h-72 bg-gold/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
 
-        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
-          Find Properties Across Tanzania 🇹🇿
-        </h1>
-
-        <p className="text-zinc-400 mt-4 text-base md:text-lg max-w-2xl">
-          Search apartments, houses, hotels,
-          hostels, lands, offices and more
-          from every region in Tanzania.
-        </p>
-
-      </div>
-
-      {/* Buttons */}
-      <div className="flex gap-4 px-4 md:px-6 mt-8 flex-wrap">
-
-        <Link
-          to="/register"
-          className="bg-white text-black px-6 py-3 rounded-2xl font-bold hover:scale-105 transition"
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="px-4 md:px-6 pt-12 md:pt-20 relative z-10"
         >
-          Register
-        </Link>
+          <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-xl border border-white/10 px-4 py-2 rounded-full text-sm text-gold-light mb-6">
+            <span className="w-2 h-2 bg-gold rounded-full animate-pulse" />
+            Premium Real Estate
+          </div>
 
-        <Link
-          to="/login"
-          className="bg-zinc-800 px-6 py-3 rounded-2xl font-bold hover:bg-zinc-700 transition"
-        >
-          Login
-        </Link>
+          <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.1]">
+            <span className="gradient-text">Find Properties</span>
+            <br />
+            Across Tanzania
+          </h1>
 
+          <div className="text-5xl md:text-6xl mt-2 animate-float inline-block">
+            🇹🇿
+          </div>
+
+          <p className="text-zinc-400 mt-6 text-base md:text-lg max-w-2xl leading-relaxed">
+            Discover premium apartments, houses, hotels,
+            hostels, lands, offices and more
+            from every region in Tanzania.
+          </p>
+
+          {/* Buttons */}
+          <div className="flex gap-4 mt-8 flex-wrap">
+            <Link
+              to="/register"
+              className="relative group px-8 py-4 rounded-2xl font-bold overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-gold to-gold-dark group-hover:scale-105 transition-transform duration-300" />
+              <span className="relative text-black">Get Started</span>
+            </Link>
+
+            <Link
+              to="/login"
+              className="glass-strong px-8 py-4 rounded-2xl font-bold hover:bg-white/10 transition-all duration-300"
+            >
+              Sign In
+            </Link>
+          </div>
+        </motion.div>
       </div>
 
       {/* Search */}
-      <div className="px-4 md:px-6 mt-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+        className="px-4 md:px-6 mt-12"
+      >
+        <div className="glass rounded-3xl p-6 md:p-8 space-y-5 shadow-2xl shadow-gold/5">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-gradient-to-b from-gold to-gold-light rounded-full" />
+            <h2 className="text-xl md:text-2xl font-bold">Search Properties</h2>
+          </div>
 
-        <div className="bg-zinc-900 p-5 rounded-3xl space-y-4">
-
-          <h2 className="text-2xl font-bold">
-            Search Properties
-          </h2>
-
-          <input
-            type="text"
-            placeholder="Search by region, district, ward..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            className="w-full bg-zinc-800 p-4 rounded-2xl outline-none"
-          />
-
-          <input
-            type="number"
-            placeholder="Maximum Price"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="w-full bg-zinc-800 p-4 rounded-2xl outline-none"
-          />
-
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">🔍</span>
+              <input
+                type="text"
+                placeholder="Search by region, district, ward..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl outline-none focus:border-gold/50 focus:bg-white/[0.07] transition-all duration-300 placeholder:text-zinc-600"
+              />
+            </div>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500">💰</span>
+              <input
+                type="number"
+                placeholder="Maximum Price (TZS)"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 p-4 pl-12 rounded-2xl outline-none focus:border-gold/50 focus:bg-white/[0.07] transition-all duration-300 placeholder:text-zinc-600"
+              />
+            </div>
+          </div>
         </div>
-
-      </div>
+      </motion.div>
 
       {/* Categories */}
-      <div className="flex gap-4 overflow-x-auto px-4 md:px-6 mt-8 pb-3">
-
-        {categories.map((cat) => (
-
-          <button
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+        className="flex gap-3 overflow-x-auto px-4 md:px-6 mt-8 pb-3 scrollbar-thin"
+      >
+        {categories.map((cat, index) => (
+          <motion.button
             key={cat.name}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setSelectedCategory(cat.name)}
-            className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold whitespace-nowrap transition ${
+            className={`flex items-center gap-2 px-5 py-3 rounded-2xl font-semibold whitespace-nowrap transition-all duration-300 ${
               selectedCategory === cat.name
-                ? "bg-white text-black"
-                : "bg-zinc-800 hover:bg-zinc-700"
+                ? "bg-gradient-to-r from-gold to-gold-dark text-black shadow-lg shadow-gold/25"
+                : "glass hover:bg-white/[0.08] text-zinc-300"
             }`}
           >
-
-            <span>{cat.icon}</span>
-
+            <span className="text-lg">{cat.icon}</span>
             <span>{cat.name}</span>
-
-          </button>
-
+          </motion.button>
         ))}
-
-      </div>
+      </motion.div>
 
       {/* Listings */}
-      <div className="px-4 md:px-6 mt-10">
-
-        <div className="flex items-center justify-between mb-6">
-
-          <h2 className="text-2xl md:text-3xl font-bold">
-            Available Properties
-          </h2>
-
-          <div className="bg-zinc-900 px-4 py-2 rounded-2xl text-zinc-300">
-            {filteredProperties.length} Listings
+      <div className="px-4 md:px-6 mt-14">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="flex items-center justify-between mb-8"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-8 bg-gradient-to-b from-gold to-emerald-500 rounded-full" />
+            <h2 className="text-2xl md:text-3xl font-bold">Available Properties</h2>
           </div>
 
-        </div>
+          <div className="glass px-5 py-2.5 rounded-2xl text-sm text-gold-light font-semibold">
+            {filteredProperties.length} Listing{filteredProperties.length !== 1 ? "s" : ""}
+          </div>
+        </motion.div>
 
         {filteredProperties.length === 0 && (
-
-          <div className="bg-zinc-900 p-10 rounded-3xl text-center">
-
-            <h2 className="text-2xl font-bold">
-              No Properties Found
-            </h2>
-
-            <p className="text-zinc-400 mt-3">
-              No listings match your search.
-            </p>
-
-          </div>
-
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="glass rounded-3xl p-14 text-center"
+          >
+            <div className="text-5xl mb-4">🔍</div>
+            <h2 className="text-2xl font-bold">No Properties Found</h2>
+            <p className="text-zinc-500 mt-3">No listings match your search criteria.</p>
+          </motion.div>
         )}
 
-        {/* Property Cards */}
-        <div className="space-y-6">
-
+        {/* Property Cards Grid */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.1 } }
+          }}
+          className="grid md:grid-cols-2 xl:grid-cols-3 gap-6"
+        >
           {filteredProperties.map((property) => (
-
-            <PropertyCard
+            <motion.div
               key={property.id}
-              property={property}
-            />
-
+              variants={{
+                hidden: { opacity: 0, y: 30 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+              }}
+            >
+              <PropertyCard property={property} />
+            </motion.div>
           ))}
-
-        </div>
-
+        </motion.div>
       </div>
 
       {/* Navbar */}
